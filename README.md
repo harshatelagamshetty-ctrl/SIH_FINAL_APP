@@ -1,6 +1,6 @@
 # AgriBid Nexus — Backend
 
-An auction agricultural procurement platform built around one core idea: **a farmer's crop-lot submission should be trusted only after it passes multiple independent evidence checks** — never a single opaque score. Everything else in the system (pricing, regional intelligence, reputation, dispute handling) builds on top of that trust layer.
+A reverse-auction agricultural procurement platform built around one core idea: **a farmer's crop-lot submission should be trusted only after it passes multiple independent evidence checks** — never a single opaque score. Everything else in the system (pricing, regional intelligence, reputation, dispute handling) builds on top of that trust layer.
 
 Built for **GEOHACK 3.0**.
 
@@ -62,7 +62,7 @@ AgriBid Nexus lets farmers list verified crop lots for competitive reverse-aucti
 
 ## Project Structure
 
-
+```
 src/main/java/com/agribid/nexus/
 ├── ai/
 │   ├── evidence/          # 7-signal evidence assessment engine
@@ -96,7 +96,7 @@ src/main/resources/
 ├── db/migration/              # Flyway migrations V1–V20
 ├── prompts/                    # AI prompt templates
 └── application*.properties
-
+```
 
 ## Prerequisites
 
@@ -107,7 +107,7 @@ src/main/resources/
 
 ## Setup & Installation
 
-
+```bash
 # 1. Clone the repository
 git clone <your-repo-url>
 cd nexus
@@ -117,11 +117,13 @@ docker run -d -p 6333:6333 -p 6334:6334 --name agribid-qdrant qdrant/qdrant
 
 # 3. Build
 mvn clean install
+```
 
+## Configuration
 
-Key properties in application.properties:
+Key properties in `application.properties`:
 
-properties
+```properties
 # JWT — the fallback value is for local development only;
 # override JWT_SECRET as a real environment variable in production
 agribid.jwt.secret=${JWT_SECRET:this-is-a-development-only-secret-replace-me-before-deploying-anywhere-real-0123456789}
@@ -143,7 +145,7 @@ agribid.cors.allowed-origins=http://localhost:3000,http://localhost:5500,http://
 agribid.integrations.payment-gateway-api-key=
 agribid.integrations.enam-api-key=
 agribid.integrations.twilio-account-sid=
-
+```
 
 ## Database & Migrations
 
@@ -169,22 +171,22 @@ All endpoints are under `/api/v1/`. A small set (listing search, provenance look
 
 ## Authentication
 
-
+```
 POST /api/v1/auth/register   → { token, userId, email, role, kycVerified }
 POST /api/v1/auth/login      → { token, userId, email, role, kycVerified }
 GET  /api/v1/auth/me         → validates an existing token, used for session restore
-
+```
 
 Send the token on every subsequent request:
-
+```
 Authorization: Bearer <token>
-
+```
 
 Only `FARMER` and `DISTRIBUTOR` can self-register. `AGRONOMIST` and `ADMIN` accounts are provisioned directly in the database.
 
 ## Admin Account Setup
 
-sql
+```sql
 DELETE FROM admin_profiles WHERE id IN (SELECT id FROM users WHERE email = 'your-admin-email');
 DELETE FROM users WHERE email = 'your-admin-email';
 
@@ -192,7 +194,7 @@ INSERT INTO users (user_type, email, password_hash, role, kyc_verified, enabled,
 VALUES ('ADMIN', 'your-admin-email', '<real-bcrypt-hash>', 'ADMIN', true, true, CURRENT_TIMESTAMP);
 
 INSERT INTO admin_profiles (id) SELECT id FROM users WHERE email = 'your-admin-email';
-
+```
 
 Generate a real BCrypt hash (12 rounds) rather than inserting plaintext — e.g. via a short Python snippet using the `bcrypt` package.
 
