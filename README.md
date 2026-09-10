@@ -1,6 +1,6 @@
 # AgriBid Nexus — Backend
 
-A reverse-auction agricultural procurement platform built around one core idea: **a farmer's crop-lot submission should be trusted only after it passes multiple independent evidence checks** — never a single opaque score. Everything else in the system (pricing, regional intelligence, reputation, dispute handling) builds on top of that trust layer.
+An auction agricultural procurement platform built around one core idea: **a farmer's crop-lot submission should be trusted only after it passes multiple independent evidence checks** — never a single opaque score. Everything else in the system (pricing, regional intelligence, reputation, dispute handling) builds on top of that trust layer.
 
 Built for **GEOHACK 3.0**.
 
